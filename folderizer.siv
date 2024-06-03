@@ -1,0 +1,12 @@
+require ["fileinto","imap4flags","variables","regex","mailbox"];
+
+## A catch all filter designed to automatically organise emails sent to a catch-all address into a folder based on the receiving address e.g amazon@example.com --> Inbox/Amazon
+## If the folder doesn't exist it is automatically created
+
+if exists "X-Delivered-To" {
+         if header :regex "X-Delivered-To" "([^@]+)" {
+                set :upperfirst "prefix" "${1}";
+                fileinto :create "INBOX.${prefix}";
+                stop;
+        } 
+}
